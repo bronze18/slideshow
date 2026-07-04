@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    background: #222;
+    position: relative;
+    width: 1536px;
+    height: 749px;
+    overflow: hidden;
+  }
+
+  .zone {
+    overflow: hidden;
+    position: absolute;
+    padding: 12px;
+    box-sizing: border-box;
+
+    border: 30px solid transparent;
+    border-image: url("frame.png") 100 round;
+
+    box-shadow:
+      inset 0 0 20px rgba(0,0,0,0.6),
+      0 0 25px rgba(0,0,0,0.7);
+
+    border-radius: 6px;
+  }
+
+  /* Fade‑in slideshow images */
+  .zone img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;   /* Fills the frame with NO empty space */
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+
+  .zone img.active {
+    opacity: 1;
+  }
+
+  /* Pixel‑based frame layout for 1536 × 749 viewport */
+
+  /* z1: Large center anchor */
+  .frame1 {
+    width: 360px;
+    height: 260px;
+    left: 588px;   /* centered: (1536 - 360)/2 */
+    top: 220px;
+  }
+
+  /* z2–z5: medium frames branching around z1 */
+
+  /* z2: above‑left */
+  .frame2 {
+    width: 260px;
+    height: 190px;
+    left: 430px;
+    top: 90px;
+  }
+
+  /* z3: above‑right */
+  .frame3 {
+    width: 260px;
+    height: 190px;
+    left: 846px;
+    top: 90px;
+  }
+
+  /* z4: below‑left */
+  .frame4 {
+    width: 240px;
+    height: 180px;
+    left: 430px;
+    top: 510px;
+  }
+
+  /* z5: below‑right */
+  .frame5 {
+    width: 240px;
+    height: 180px;
+    left: 866px;
+    top: 510px;
+  }
+
+  /* z6–z10: secondary branch frames */
+
+  /* z6: left mid (portrait) */
+  .frame6 {
+    width: 210px;
+    height: 230px;
+    left: 260px;
+    top: 250px;
+  }
+
+  /* z7: right mid (portrait) */
+  .frame7 {
+    width: 210px;
+    height: 230px;
+    left: 1126px;
+    top: 250px;
+  }
+
+  /* z8: upper‑left small/medium */
+  .frame8 {
+    width: 190px;
+    height: 160px;
+    left: 300px;
+    top: 40px;
+  }
+
+  /* z9: upper‑right small/medium */
+  .frame9 {
+    width: 190px;
+    height: 160px;
+    left: 1046px;
+    top: 40px;
+  }
+
+  /* z10: lower‑center small/medium */
+  .frame10 {
+    width: 200px;
+    height: 150px;
+    left: 668px;
+    top: 520px;
+  }
+
+  /* z11–z13: smallest accent frames */
+
+  /* z11: far left accent */
+  .frame11 {
+    width: 150px;
+    height: 130px;
+    left: 120px;
+    top: 140px;
+  }
+
+  /* z12: far right accent */
+  .frame12 {
+    width: 150px;
+    height: 130px;
+    left: 1266px;
+    top: 140px;
+  }
+
+  /* z13: lower‑right accent (smallest branch tip) */
+  .frame13 {
+    width: 140px;
+    height: 120px;
+    left: 1186px;
+    top: 580px;
+  }
+</style>
+</head>
+<body>
+
+<div class="zone frame1"  id="z1"></div>
+<div class="zone frame2"  id="z2"></div>
+<div class="zone frame3"  id="z3"></div>
+<div class="zone frame4"  id="z4"></div>
+<div class="zone frame5"  id="z5"></div>
+<div class="zone frame6"  id="z6"></div>
+<div class="zone frame7"  id="z7"></div>
+<div class="zone frame8"  id="z8"></div>
+<div class="zone frame9"  id="z9"></div>
+<div class="zone frame10" id="z10"></div>
+<div class="zone frame11" id="z11"></div>
+<div class="zone frame12" id="z12"></div>
+<div class="zone frame13" id="z13"></div>
+
+<script>
+/* SIMPLE IMAGE LOADER (Samsung‑safe, no async/await) */
+function loadImages(path, prefix, start, end, callback) {
+  var exts = ["jpg", "jpeg", "png"];
+  var found = [];
+  var totalChecks = (end - start + 1) * exts.length;
+  var completedChecks = 0;
+
+  function checkDone() {
+    completedChecks++;
+    if (completedChecks >= totalChecks) {
+      callback(found);
+    }
+  }
+
+  for (var i = start; i <= end; i++) {
+    (function(i) {
+      var matched = false;
+      for (var e = 0; e < exts.length; e++) {
+        (function(ext) {
+          var url = path + "/" + prefix + i + "." + ext;
+          var img = new Image();
+          img.onload = function() {
+            if (!matched) {
+              matched = true;
+              found.push(url);
+            }
+            checkDone();
+          };
+          img.onerror = function() {
+            checkDone();
+          };
+          img.src = url;
+        })(exts[e]);
+      }
+    })(i);
+  }
+}
+
+/* Fade‑in slideshow */
+function startSlideshow(zoneId, images, interval) {
+  if (!images || images.length === 0) return;
+
+  var index = 0;
+  var zone = document.getElementById(zoneId);
+
+  for (var i = 0; i < images.length; i++) {
+    var img = document.createElement("img");
+    img.src = images[i];
+    zone.appendChild(img);
+  }
+
+  var imgElements = zone.querySelectorAll("img");
+
+  function showNext() {
+    for (var j = 0; j < imgElements.length; j++) {
+      imgElements[j].classList.toggle("active", j === index);
+    }
+    index = (index + 1) % images.length;
+  }
+
+  showNext();
+  setInterval(showNext, interval);
+}
+
+/* LOAD 13 GALLERIES → 13 FRAMES */
+function init() {
+  var total = 13;
+  var loaded = 0;
+
+  function loadGallery(n) {
+    loadImages("slides/gallery" + n, "image", 1, 50, function(imgs) {
+      startSlideshow("z" + n, imgs, 8000 + (n * 500));
+      loaded++;
+    });
+  }
+
+  for (var i = 1; i <= total; i++) {
+    loadGallery(i);
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
