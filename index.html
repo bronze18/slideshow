@@ -250,7 +250,7 @@ function init() {
   var loaded = 0;
 
   function loadGallery(n) {
-    loadImages("slides/gallery" + n, "image", 1, 50, function(imgs) {
+    loadImages("slides/gallery" + n, "image", 0, 50, function(imgs) {
       startSlideshow("z" + n, imgs, 8000 + (n * 500));
       loaded++;
     });
