@@ -48,114 +48,118 @@
   /* Pixel‑based frame layout for 1536 × 749 viewport */
 
   /* z1: Large center anchor */
-  .frame1 {
-    width: 360px;
-    height: 260px;
-    left: 588px;   /* centered: (1536 - 360)/2 */
-    top: 220px;
-  }
+  /* CENTER ANCHOR */
+.frame1 {
+  width: 360px;
+  height: 260px;
+  left: 540px;   /* moved left slightly */
+  top: 260px;    /* moved down slightly */
+}
 
-  /* z2–z5: medium frames branching around z1 */
+/* ABOVE LEFT */
+.frame2 {
+  width: 260px;
+  height: 190px;
+  left: 360px;   /* moved left */
+  top: 80px;     /* moved up slightly */
+}
 
-  /* z2: above‑left */
-  .frame2 {
-    width: 260px;
-    height: 190px;
-    left: 430px;
-    top: 90px;
-  }
+/* ABOVE RIGHT */
+.frame3 {
+  width: 260px;
+  height: 190px;
+  left: 820px;   /* moved right */
+  top: 80px;
+}
 
-  /* z3: above‑right */
-  .frame3 {
-    width: 260px;
-    height: 190px;
-    left: 846px;
-    top: 90px;
-  }
+/* BELOW LEFT */
+.frame4 {
+  width: 240px;
+  height: 180px;
+  left: 360px;   /* moved left */
+  top: 540px;    /* moved down */
+}
 
-  /* z4: below‑left */
-  .frame4 {
-    width: 240px;
-    height: 180px;
-    left: 430px;
-    top: 510px;
-  }
+/* BELOW RIGHT */
+.frame5 {
+  width: 240px;
+  height: 180px;
+  left: 820px;   /* moved right */
+  top: 540px;
+}
 
-  /* z5: below‑right */
-  .frame5 {
-    width: 240px;
-    height: 180px;
-    left: 866px;
-    top: 510px;
-  }
+/* LEFT MID */
+.frame6 {
+  width: 210px;
+  height: 230px;
+  left: 180px;   /* moved left */
+  top: 300px;    /* moved down */
+}
 
-  /* z6–z10: secondary branch frames */
+/* RIGHT MID */
+.frame7 {
+  width: 210px;
+  height: 230px;
+  left: 1050px;  /* moved right */
+  top: 300px;
+}
 
-  /* z6: left mid (portrait) */
-  .frame6 {
-    width: 210px;
-    height: 230px;
-    left: 260px;
-    top: 250px;
-  }
+/* UPPER LEFT SMALL */
+.frame8 {
+  width: 190px;
+  height: 160px;
+  left: 140px;   /* moved left */
+  top: 5px;     /* moved up */
+}
 
-  /* z7: right mid (portrait) */
-  .frame7 {
-    width: 210px;
-    height: 230px;
-    left: 1126px;
-    top: 250px;
-  }
+/* UPPER RIGHT SMALL */
+.frame9 {
+  width: 190px;
+  height: 160px;
+  left: 1100px;  /* moved right */
+  top: 5px
+}
 
-  /* z8: upper‑left small/medium */
-  .frame8 {
-    width: 190px;
-    height: 160px;
-    left: 300px;
-    top: 40px;
-  }
+/* LOWER CENTER SMALL */
+.frame10 {
+  width: 200px;
+  height: 150px;
+  left: 620px;   /* centered better */
+  top: 580px;    /* moved down */
+}
 
-  /* z9: upper‑right small/medium */
-  .frame9 {
-    width: 190px;
-    height: 160px;
-    left: 1046px;
-    top: 40px;
-  }
+/* FAR LEFT ACCENT */
+.frame11 {
+  width: 150px;
+  height: 130px;
+  left: 60px;    /* moved left */
+  top: 165px;    /* moved down */
+}
 
-  /* z10: lower‑center small/medium */
-  .frame10 {
-    width: 200px;
-    height: 150px;
-    left: 668px;
-    top: 520px;
-  }
+/* FAR RIGHT ACCENT */
+.frame12 {
+  width: 150px;
+  height: 130px;
+  left: 1230px;  /* moved right */
+  top: 165px;
+}
 
-  /* z11–z13: smallest accent frames */
+/* LOWER RIGHT ACCENT */
+.frame13 {
+  width: 140px;
+  height: 120px;
+  left: 1100px;  /* moved right */
+  top: 620px;    /* moved down */
+}
 
-  /* z11: far left accent */
-  .frame11 {
-    width: 150px;
-    height: 130px;
-    left: 120px;
-    top: 140px;
-  }
+/* LOWER LEFT ACCENT */
+.frame14 {
+  width: 140px;
+  height: 120px;
+  left: 140px;  /* moved right */
+  top: 620px;    /* moved down */
+}
 
-  /* z12: far right accent */
-  .frame12 {
-    width: 150px;
-    height: 130px;
-    left: 1266px;
-    top: 140px;
-  }
-
-  /* z13: lower‑right accent (smallest branch tip) */
-  .frame13 {
-    width: 140px;
-    height: 120px;
-    left: 1186px;
-    top: 580px;
-  }
 </style>
 </head>
 <body>
@@ -173,6 +177,7 @@
 <div class="zone frame11" id="z11"></div>
 <div class="zone frame12" id="z12"></div>
 <div class="zone frame13" id="z13"></div>
+<div class="zone frame14" id="z14"></div>
 
 <script>
 /* SIMPLE IMAGE LOADER (Samsung‑safe, no async/await) */
@@ -239,9 +244,9 @@ function startSlideshow(zoneId, images, interval) {
   setInterval(showNext, interval);
 }
 
-/* LOAD 13 GALLERIES → 13 FRAMES */
+/* LOAD 14 GALLERIES → 14 FRAMES */
 function init() {
-  var total = 13;
+  var total = 14;
   var loaded = 0;
 
   function loadGallery(n) {
